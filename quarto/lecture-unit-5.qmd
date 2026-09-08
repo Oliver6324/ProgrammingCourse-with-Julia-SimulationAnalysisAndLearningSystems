@@ -15,11 +15,11 @@ format:
 
 # Unit 5: More language features for software architecture
 
-In the previous three units we explored basics of programming and computation (Unit 2), algorithms and data structures (Unit 3), and data files and numerics (Unit 4). In this unit we take a deeper and more thorough approach at basic Julia language features. 
+In the previous three units we explored basics of programming and computation (Unit 2), algorithms and data structures (Unit 3), and data files and numerics (Unit 4). In this unit we take a deeper and more thorough approach at basic Julia language features.
 
 Programming languages, including Julia, are designed mostly with these aims in mind:
 
- 1. **Execution speed** — programs should run fast enough to solve the problem at hand. 
+ 1. **Execution speed** — programs should run fast enough to solve the problem at hand.
  2. **Coding speed** — writing programs to solve problems should be quick, easy and enjoyable for the coder.
  3. **Scalable engineering** — creating and maintaining large programs with many contributors should be no harder than writing small programs yourself.
 
@@ -174,7 +174,7 @@ struct Complex64
 end
 ```
 
-The compiler knows that a `Complex64` needs 128 bits of data to represent - 64 bits each for `re` and `im`. This type is a distinct set with `2^128` possible values. 
+The compiler knows that a `Complex64` needs 128 bits of data to represent - 64 bits each for `re` and `im`. This type is a distinct set with `2^128` possible values.
 
 You can construct a struct with the "constructor" - where the type doubles as a kind of function that lets you specify the fields:
 
@@ -186,7 +186,7 @@ z = Complex64(1.0, 2.0)
 sizeof(z)
 ```
 
-You can get a field from the struct with the `.` operator, for example 
+You can get a field from the struct with the `.` operator, for example
 
 ```{julia}
 z.re
@@ -237,7 +237,7 @@ struct Complex{T}
 end
 ```
 
-Given some type `T`, `Complex{T}` is a struct with fields `re` and `im` of type `T`. 
+Given some type `T`, `Complex{T}` is a struct with fields `re` and `im` of type `T`.
 
 This useful because now we don't need a separate `struct` definition for complex numbers with `Float32` components, or `Int64` components, or whatever. Just one definition suffices for them all. This lets us write quite generic code that is oblivious to the exact type `T` but uses properties common to all complex numbers. For example, the absolute value squared can be written:
 
@@ -319,7 +319,7 @@ We saw earlier that an expression is a piece of code that, when evaluated, produ
 1 + 1
 ```
 
-One thing you should understand about Julia is that it uses type inference to predict the output type of an expression. 
+One thing you should understand about Julia is that it uses type inference to predict the output type of an expression.
 
 ```{julia}
 using InteractiveUtils
@@ -469,9 +469,9 @@ The rule in Julia is that the last expression in a block of code is the value re
 
 ```{julia}
 begin
-   1
-   2
-   3
+    1
+    2
+    3
 end
 ```
 
@@ -479,16 +479,16 @@ We see blocks of code everywhere in Julia — inside `if` and `else` statements,
 
 ```{julia}
 function f()
-   x = 0
-   while x < 10
-   if x % 2 == 0
-   println("$x is even")
-   else
-   println("$x is odd")
-   end
-   x = x + 1
-   end
-   return x
+    x = 0
+    while x < 10
+        if x % 2 == 0
+            println("$x is even")
+        else
+            println("$x is odd")
+        end
+        x = x + 1
+    end
+    return x
 end
 
 f()
@@ -666,7 +666,7 @@ For now, just know you can attach methods to _any_ type with special syntax like
 (x::Bool)() = "this is $x"
 
 function (x::Bool)()
-   return "this is $x"
+    return "this is $x"
 end
 ```
 
@@ -686,7 +686,7 @@ In Julia you can define functions within functions.
 
 ```{julia}
 function adder(x)
-   return y -> y + x
+    return y -> y + x
 end
 ```
 
@@ -717,9 +717,9 @@ Note again it doesn't matter which form of function syntax we use. It's just dif
 
 ```{julia}
 function adder(x)
-   return function (y)
-   return y + x
-   end
+    return function (y)
+        return y + x
+    end
 end
 ```
 
@@ -843,11 +843,11 @@ A simple thing to do might be to add up all the inputs:
 
 ```{julia}
 function add_all(inputs...)
-   out = 0
-   for x in inputs
-   out += x
-   end
-   return out
+    out = 0
+    for x in inputs
+        out += x
+    end
+    return out
 end
 
 add_all(1, 2, 3, 4, 5)
@@ -855,11 +855,11 @@ add_all(1, 2, 3, 4, 5)
 
 ```{julia}
 function polynomialGenerator(a...)
-   n = length(a) - 1
-   poly = function(x)
-   return sum(a[i+1] * x^i for i in 0:n)
-   end
-   return poly
+    n = length(a) - 1
+    poly = function(x)
+        return sum(a[i+1] * x^i for i in 0:n)
+    end
+    return poly
 end
 
 polynomial = polynomialGenerator(1, 3, -10)
@@ -886,7 +886,7 @@ You can have optional arguments (or default values):
 using Distributions
 
 function my_density(x::Float64, μ::Float64 = 0.0, σ::Float64 = 1.0)
-   return exp(-(x-μ)^2 / (2σ^2)) / (σ*√(2π))
+    return exp(-(x-μ)^2 / (2σ^2)) / (σ*√(2π))
 end
 
 x = 1.5
@@ -900,7 +900,7 @@ Arguments following the `;` character in the function definition or the function
 
 ```{julia}
 function my_density(x::Float64; μ::Float64 = 0.0, σ::Float64 = 1.0)
-   return exp(-(x-μ)^2/(2σ^2) ) / (σ*√(2π)) 
+    return exp(-(x-μ)^2/(2σ^2) ) / (σ*√(2π))
 end
 
 @show pdf(Normal(0.0,2.5),x) my_density(x, σ=2.5);
@@ -910,7 +910,7 @@ We can even make a function that takes arbitrary numbers of positional and keywo
 
 ```{julia}
 function very_flexible_function(args...; kwargs...)
-   @info "All the args" args kwargs
+    @info "All the args" args kwargs
 end
 
 very_flexible_function(2.5, false, a=1, b="two", c=:three)
@@ -946,9 +946,9 @@ You can also destructure fields of structs and named tuples in the reverse way y
 
 ```{julia}
 function f(x::Complex)
-   (; re, im) = x
-   println("Real part: $re")
-   println("Imaginary part: $im")
+    (; re, im) = x
+    println("Real part: $re")
+    println("Imaginary part: $im")
 end
 
 f(10 + 42im)
@@ -1004,17 +1004,17 @@ One impressive piece of syntax sugar is the `for` loop. It is in fact a special 
 #| eval: false
 # this loop...
 for x in iterable
-   # <CODE>
+    # <CODE>
 end
 
 # ...is equivalent to
 tmp = iterate(iterable)
 while tmp !== nothing
-   (x, state) = tmp
+    (x, state) = tmp
 
-   # <CODE>
-   
-   tmp = iterate(iterable, state)
+    # <CODE>
+
+    tmp = iterate(iterable, state)
 end
 ```
 
@@ -1029,13 +1029,13 @@ One additional thing to know about is exception handling.
 ```{julia}
 function my_2_by_2_inv(A::Matrix{Float64})
    if size(A) != (2,2)
-   error("This function only works for 2x2 matrices")
+       error("This function only works for 2x2 matrices")
    end
 
    d = A[1,1]*A[2,2] - A[2,1]*A[1,2]
 
-   if d ≈ 0
-   throw(ArgumentError("matrix is singular or near singular")) #\approx + [TAB]
+   if d ≈ 0     # \approx + [TAB]
+       throw(ArgumentError("matrix is singular or near singular"))
    end
 
    return [A[2,2] -A[1,2]; -A[2,1] A[1,1]] ./ d
@@ -1062,9 +1062,9 @@ Random.seed!(0)
 for _ ∈ 1:10 #\in + [TAB]
    A = float.(rand(1:5,2,2))
    try
-   my_2_by_2_inv(A)
+       my_2_by_2_inv(A)
    catch e
-   println(e)
+       println(e)
    end
 end
 ```
@@ -1098,20 +1098,20 @@ Stacktrace:
 It's possible to "catch" and handle errors that happened using `try`, `catch` and `finally`.
 
 ```{julia}
-try 
-   h(A)
+try
+    h(A)
 catch e
-   @info "Handling exception" println(e)
+    @info "Handling exception" println(e)
 end
 ```
 
 ```{julia}
 try
-   0 ÷ 0
+    0 ÷ 0
 catch e
-   @show e
+    @show e
 finally
-   println("done")
+    println("done")
 end;
 ```
 
@@ -1122,12 +1122,12 @@ One place closures, and `do` syntax in particular, gets used is when you want re
 ```{julia}
 #| eval: false
 function open(f, filename::String)
-   io = open(filename)
-   try
-   f(io)
-   finally
-   close(io)
-   end
+    io = open(filename)
+    try
+        f(io)
+    finally
+        close(io)
+    end
 end
 ```
 
@@ -1146,8 +1146,8 @@ When you want to use this pattern it is common to use `do` syntax like so:
 ```{julia}
 #| eval: false
 open(filename) do (io)
-   # Read the first 128 bytes from the file
-   return read(io, 128) # might throw an exception
+    # Read the first 128 bytes from the file
+    return read(io, 128) # might throw an exception
 end
 ```
 
@@ -1165,8 +1165,8 @@ Local scope is the simplest, and we'll look at that first. By default bindings i
 x = 0
 
 function f()
-   x = 1 # create a new local variable
-   return 2 * x
+    x = 1 # create a new local variable
+    return 2 * x
 end
 
 f()
@@ -1177,8 +1177,8 @@ You can use the `local` keyword to create new local bindings. The above is 100% 
 ```{julia}
 #| eval: false
 function f()
-   local x = 1 # create a new local variable
-   return 2 * x
+    local x = 1 # create a new local variable
+    return 2 * x
 end
 ```
 
@@ -1188,8 +1188,8 @@ If you want to modify the global variable, there is a `global` keyword for that:
 x = 0
 
 function f()
-   global x = 1 # modify the global variable
-   return 2 * x
+    global x = 1 # modify the global variable
+    return 2 * x
 end
 
 @show x
@@ -1203,19 +1203,19 @@ _Q: What is the difference between these two functions?_
 
 ```{julia}
 function f1()
-   x = 0
-   for i = 1:10
-   x = i
-   end
-   return x
+    x = 0
+    for i = 1:10
+        x = i
+    end
+    return x
 end
 
 function f2()
-   x = 0
-   for i = 1:10
-   local x = i
-   end
-   return x
+    x = 0
+    for i = 1:10
+        local x = i
+    end
+    return x
 end
 ```
 
@@ -1223,10 +1223,10 @@ By default variables created _inside_ a loop no longer exist after the loop:
 
 ```{julia}
 function f()
-   for i = 1:3
-   x = i
-   end
-   return x
+    for i = 1:3
+        x = i
+    end
+    return x
 end
 f()
 ```
@@ -1235,11 +1235,11 @@ To fix that you can define that variable in advance using `local`:
 
 ```{julia}
 function f()
-   local x
-   for i = 1:3
-   x = i
-   end
-   return x
+    local x
+    for i = 1:3
+        x = i
+    end
+    return x
 end
 f()
 ```
@@ -1248,11 +1248,11 @@ Occasionally you might want to use the value of what is being iterated, where yo
 
 ```{julia}
 function f()
-   x = 0
-   for outer x = 1:3
-   # empty
-   end
-   return x
+    x = 0
+    for outer x = 1:3
+        # empty
+    end
+    return x
 end
 f()
 ```
@@ -1261,13 +1261,13 @@ That can be useful in combination to `break`, where you can see where the loop t
 
 ```{julia}
 function f()
-   x = 0
-   for outer x = 1:3
-   if x > 1.5
-   break
-   end
-   end
-   return x
+    x = 0
+    for outer x = 1:3
+        if x > 1.5
+            break
+        end
+    end
+    return x
 end
 f()
 ```
@@ -1292,8 +1292,8 @@ As we saw earlier, a type can be **mutable** or not (**immutable**). Values/obje
 When you pass a mutable object to a function, the function can change the data contained within.
 
 ```{julia}
-function mutating_function(z::Array{Int}) 
-   z[1] = 0
+function mutating_function(z::Array{Int})
+    z[1] = 0
 end
 
 x = [1]
@@ -1313,8 +1313,8 @@ For immutable values, there is no way to modify their contents. They are never m
 Variable bindings are not modified inside functions. The function below introduces a _new_ binding `z` every time the function is called, and `x` is unaffected.
 
 ```{julia}
-function rebinding_function(z::Array{Int}) 
-   z = [0]
+function rebinding_function(z::Array{Int})
+    z = [0]
 end
 
 x = [1]
@@ -1435,22 +1435,22 @@ As mentioned, Julia has a type tree. Let's walk down from `Number`:
 using InteractiveUtils: subtypes
 
 function type_and_children(type, prefix = "", child_prefix = "")
-   if isconcretetype(type)
-   @assert isempty(subtypes(type))
+    if isconcretetype(type)
+        @assert isempty(subtypes(type))
 
-   println(prefix, type, ": concrete")
-   else
-   println(prefix, type, isabstracttype(type) ? ": abstract" : ": parameterised")
+        println(prefix, type, ": concrete")
+    else
+        println(prefix, type, isabstracttype(type) ? ": abstract" : ": parameterised")
 
-   children = subtypes(type)
-   for (i, c) in enumerate(children)
-   if i == length(children)
-   type_and_children(c, "$(child_prefix) └─╴", "$(child_prefix)    ")
-   else
-   type_and_children(c, "$(child_prefix) ├─╴", "$(child_prefix) │  ")
-   end 
-   end
-   end
+        children = subtypes(type)
+        for (i, c) in enumerate(children)
+            if i == length(children)
+                type_and_children(c, "$(child_prefix) └─╴", "$(child_prefix)    ")
+            else
+                type_and_children(c, "$(child_prefix) ├─╴", "$(child_prefix) │  ")
+            end
+        end
+    end
 end
 
 type_and_children(Number)
@@ -1470,7 +1470,7 @@ abstract type AbstractFloat <: Real
 end
 
 primitive type Float64 <: AbstractFloat
-   64
+    64
 end
 ```
 
@@ -1570,7 +1570,7 @@ We can start simple with a single type:
 ```{julia}
 #| eval: false
 struct Metre{T <: Real}
-   value::T
+    value::T
 end
 ```
 
@@ -1654,23 +1654,23 @@ This will be the "supertype" for our length types. (Remember "super" is Latin fo
 
 ```{julia}
 struct Metre{T} <: AbstractLength
-   value::T
+    value::T
 end
 
 struct Kilometre{T} <: AbstractLength
-   value::T
+    value::T
 end
 
 struct Centimetre{T} <: AbstractLength
-   value::T
+    value::T
 end
 
 struct Inch{T} <: AbstractLength
-   value::T
+    value::T
 end
 
 struct Mile{T} <: AbstractLength
-   value::T
+    value::T
 end;
 ```
 
@@ -1783,27 +1783,27 @@ If we want to be a bit more fancy, we can get Julia to skip the conversion for a
 
 ```{julia}
 function Base.:(+)(x::AbstractLength, y::AbstractLength)
-   if unit(x) == unit(y)
-   return unit(x)(x.value + y.value)
-   else
-   return Metre(x) + Metre(y)
-   end
+    if unit(x) == unit(y)
+        return unit(x)(x.value + y.value)
+    else
+        return Metre(x) + Metre(y)
+    end
 end
 
 function Base.:(-)(x::AbstractLength, y::AbstractLength)
-   if unit(x) == unit(y)
-   return unit(x)(x.value - y.value)
-   else
-   return Metre(x) - Metre(y)
-   end
+    if unit(x) == unit(y)
+        return unit(x)(x.value - y.value)
+    else
+        return Metre(x) - Metre(y)
+    end
 end
 
 function Base.:(/)(x::AbstractLength, y::AbstractLength)
-   if unit(x) == unit(y)
-   return x.value / y.value
-   else
-   return Metre(x) / Metre(y)
-   end
+    if unit(x) == unit(y)
+        return x.value / y.value
+    else
+        return Metre(x) / Metre(y)
+    end
 end;
 ```
 
@@ -1907,12 +1907,12 @@ abstract type Triangle <: Shape2D
 end
 
 struct EquilateralTriangle{T} <: Triangle
-   side::T
+    side::T
 end
 
 struct RightAngledTriangle{T} <: Triangle
-   height::T
-   width::T
+    height::T
+    width::T
 end;
 ```
 
@@ -1923,12 +1923,12 @@ abstract type Quadrilateral <: Shape2D
 end
 
 struct Square{T} <: Quadrilateral
-   side::T
+    side::T
 end
 
 struct Rectangle{T} <: Quadrilateral
-   height::T
-   width::T
+    height::T
+    width::T
 end;
 ```
 
@@ -1936,7 +1936,7 @@ And here is a circle, a direct subtype of `Shape2D`:
 
 ```{julia}
 struct Circle{T} <: Shape2D
-   radius::T
+    radius::T
 end;
 ```
 
@@ -1951,11 +1951,11 @@ define a regular polygon with `N` sides as follows:
 ```{julia}
 struct RegularPolygon{N, T} <: Shape2D
     side_length::T
-end 
+end
 
 # and a constructor for convenience
 function RegularPolygon{N}(side) where N
-   RegularPolygon{N,typeof(side)}(side)
+    RegularPolygon{N,typeof(side)}(side)
 end
 
 # const Square = RegularPolygon{4}  # We already defined squares above
@@ -1975,24 +1975,24 @@ For each of these shapes we can determine the perimeter:
 
 ```{julia}
 function perimeter(shape::EquilateralTriangle)
-   return 3 * shape.side
+    return 3 * shape.side
 end
 
 function perimeter(shape::RightAngledTriangle)
-   angle = atan(shape.height / shape.width)
-   return shape.width + shape.height + shape.width / cos(angle)
+    angle = atan(shape.height / shape.width)
+    return shape.width + shape.height + shape.width / cos(angle)
 end
 
 function perimeter(shape::Square)
-   return 4 * shape.side
+    return 4 * shape.side
 end
 
 function perimeter(shape::Rectangle)
-   return 2 * shape.width + 2 * shape.height
+    return 2 * shape.width + 2 * shape.height
 end
 
 function perimeter(shape::Circle)
-   return 2π * shape.radius
+    return 2π * shape.radius
 end
 
 function perimeter(shape::RegularPolygon{N, T}) where {N, T}
@@ -2004,27 +2004,27 @@ And the area:
 
 ```{julia}
 function area(shape::EquilateralTriangle)
-   return 0.5 * sind(60) * shape.side * shape.side
+    return 0.5 * sind(60) * shape.side * shape.side
 end
 
 function area(shape::RightAngledTriangle)
-   return 0.5 * shape.width + shape.height
+    return 0.5 * shape.width + shape.height
 end
 
 function area(shape::Square)
-   return shape.side * shape.side
+    return shape.side * shape.side
 end
 
 function area(shape::Rectangle)
-   return shape.width * shape.height
+    return shape.width * shape.height
 end
 
 function area(shape::Circle)
-   return π * shape.radius * shape.radius
+    return π * shape.radius * shape.radius
 end
 
 function area(shape::RegularPolygon{N, T}) where {N, T}
-    return  (N * shape.side_length^2) / (4 * tand(180/N))
+    return (N * shape.side_length^2) / (4 * tand(180/N))
 end;
 ```
 
@@ -2108,21 +2108,21 @@ using Statistics
 fetch_new_data() = 100*rand()
 
 function print_running_stats(n::Integer, running_stats_storage)
-   for i in 1:n
-   # Get some data
-   data_point = fetch_new_data()
+    for i in 1:n
+        # Get some data
+        data_point = fetch_new_data()
 
-   # Collect data for statistics
-   push!(running_stats_storage, data_point)
+        # Collect data for statistics
+        push!(running_stats_storage, data_point)
 
-   # Periodically we look at summary statistics
-   if i % 20 == 0
-   println("-------")
-   println("Count: ", length(running_stats_storage))
-   println("Mean: ", mean(running_stats_storage))
-   println("Max: ", maximum(running_stats_storage))
-   end
-   end
+        # Periodically we look at summary statistics
+        if i % 20 == 0
+            println("-------")
+            println("Count: ", length(running_stats_storage))
+            println("Mean: ", mean(running_stats_storage))
+            println("Max: ", maximum(running_stats_storage))
+        end
+    end
 end
 
 Random.seed!(0)
@@ -2136,11 +2136,11 @@ Here's an approach to do "online" statistics:
 
 ```{julia}
 mutable struct RunningStats
-   count::Int
-   sum::Float64
-   max::Float64
+    count::Int
+    sum::Float64
+    max::Float64
 
-   RunningStats() = new(0, 0.0, -Inf)
+    RunningStats() = new(0, 0.0, -Inf)
 end
 
 running_stats_storage = RunningStats()
@@ -2158,16 +2158,16 @@ mean(rsd::RunningStats) = rsd.sum / rsd.count
 maximum(rsd::RunningStats) = rsd.max
 
 function push!(rsd::RunningStats, data_point)
-   # Update the count
-   rsd.count += 1
+    # Update the count
+    rsd.count += 1
 
-   # Update the sum
-   rsd.sum += data_point
+    # Update the sum
+    rsd.sum += data_point
 
-   # Update the maximum
-   if rsd.max < data_point
-   rsd.max = data_point
-   end
+    # Update the maximum
+    if rsd.max < data_point
+        rsd.max = data_point
+    end
 end
 
 Random.seed!(0)
@@ -2181,12 +2181,12 @@ Going a bit more generic we could have also had,
 
 ```{julia}
 mutable struct FlexRunningStats{T <: Number}
-   data::Vector{T}
-   count::Int
-   sum::T
-   max::T
+    data::Vector{T}
+    count::Int
+    sum::T
+    max::T
 
-   FlexRunningStats{T}() where {T} = new{T}(T[], 0, zero(T), typemin(T))
+    FlexRunningStats{T}() where {T} = new{T}(T[], 0, zero(T), typemin(T))
 end
 
 length(rsd::FlexRunningStats) = rsd.count
@@ -2195,19 +2195,19 @@ mean(rsd::FlexRunningStats) = rsd.sum / rsd.count
 maximum(rsd::FlexRunningStats) = rsd.max
 
 function push!(rsd::FlexRunningStats, data_point)
-   # Insert the new datapoint
-   push!(rsd.data, data_point)
+    # Insert the new datapoint
+    push!(rsd.data, data_point)
 
-   # Update the count
-   rsd.count += 1
+    # Update the count
+    rsd.count += 1
 
-   # Update the sum
-   rsd.sum += data_point
+    # Update the sum
+    rsd.sum += data_point
 
-   # Update the maximum
-   if rsd.max < data_point
-   rsd.max = data_point
-   end
+    # Update the maximum
+    if rsd.max < data_point
+        rsd.max = data_point
+    end
 end
 
 fetch_new_data() = rand(0:10^4) # override this to return integers
@@ -2223,7 +2223,7 @@ print_running_stats(100, running_stats_storage)
 
 But there is a problem with the above. What if `T` was `Complex`? Should we have done `<: Number` or `<: Real`?
 
-In generic code its good to consider what *interfaces* we want to use, so we can figure out which type constraints are appropriate. Julia will go ahead and assemble the pieces of your program together into a coherent whole. 
+In generic code its good to consider what *interfaces* we want to use, so we can figure out which type constraints are appropriate. Julia will go ahead and assemble the pieces of your program together into a coherent whole.
 
 ### Interfaces
 
@@ -2308,26 +2308,26 @@ You can make interesting data structures by referencing other instances of yours
 Random.seed!(0)
 
 struct Node
-   id::UInt16
-   friends::Vector{Node}
-   Node() = new(rand(UInt16), [])
-   Node(friend::Node) = new(rand(UInt16),[friend])
+    id::UInt16
+    friends::Vector{Node}
+    Node() = new(rand(UInt16), [])
+    Node(friend::Node) = new(rand(UInt16),[friend])
 end
 
 """
 Makes 'n` children to node, each with a single friend
 """
 function make_children(node::Node, n::Int, friend::Node)
-   for _ in 1:n
-   new_node = Node(friend)
-   push!(node.friends, new_node)
-   end
+    for _ in 1:n
+        new_node = Node(friend)
+        push!(node.friends, new_node)
+    end
 end
 
 root = Node()
 make_children(root, 3, root)
 for node in root.friends
-   make_children(node, 2,root)
+    make_children(node, 2,root)
 end
 root
 ```
