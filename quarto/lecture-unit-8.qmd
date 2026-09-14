@@ -123,11 +123,11 @@ We were introduced to CSV files earlier in the course. Here's the first few line
 
 ```{julia}
 open("../data/athlete_events.csv") do io
-   i = 0
-   while i < 5
-   println(readline(io))
-   i += 1
-   end
+    i = 0
+    while i < 5
+        println(readline(io))
+        i += 1
+    end
 end
 ```
 
@@ -347,9 +347,9 @@ filter(row -> isodd(row.a), df)
 
 Unfortunately, in this case this is quite inefficient. For each row the program must
 
- 1. construct a `DataFrameRow`
- 2. access the `a` field _dynamically_
- 3. compute `isodd`
+1. construct a `DataFrameRow`
+2. access the `a` field _dynamically_
+3. compute `isodd`
 
 This is slower than we'd like because the compiler doesn't really know what columns are in a `DataFrame` (or a `DataFrameRow`) and what type they may be. Every time we do step 2 there is a lot of overhead.
 
@@ -563,10 +563,10 @@ using GLM, Underscores
 df = DataFrame(CSV.File("../data/athlete_events.csv"; missingstring = "NA"))
 
 rowing_by_year = @_ df |> 
-   groupby(__, [:Year, :Sport]) |>
-   combine(__, nrow => :Count) |>
-   sort(__, :Year) |>
-   filter(:Sport => ==("Rowing"), __)
+    groupby(__, [:Year, :Sport]) |>
+    combine(__, nrow => :Count) |>
+    sort(__, :Year) |>
+    filter(:Sport => ==("Rowing"), __)
 
 model = lm(@formula(Count ~ Year), rowing_by_year)
 
@@ -607,11 +607,11 @@ println("Estimated performance test computers: for computer A: ", pred([32000, 3
 
 # Using the data and the `predict()` function
 test_data = DataFrame(
-   name  = ["Computer A", "Computer B"],
-   MMax  = [32000,        32000],
-   Cach  = [32,           16],
-   ChMax = [32,           32],
-   Freq  = [4*10^7,       6*10^7],
+    name  = ["Computer A", "Computer B"],
+    MMax  = [32000,        32000],
+    Cach  = [32,           16],
+    ChMax = [32,           32],
+    Freq  = [4*10^7,       6*10^7],
 )
 
 println("Estimated performance test computers:")
