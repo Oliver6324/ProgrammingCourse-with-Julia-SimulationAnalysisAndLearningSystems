@@ -17,7 +17,7 @@ format:
 
 In this unit we move away from computer algebra to a completely different world: randomness and simulation. The first component that we cover, **uniform pseudorandom numbers**, is in fact mildly related to computer algebra because algorithms for generating uniform pseudorandom numbers are often analyzed with number theory (however we won't go in that direction). The latter components of the unit are significantly different as they involve probability distributions, statistics, modelling and simulation, as well as structured software design.
 
-[Monte Carlo](https://en.wikipedia.org/wiki/Monte_Carlo) is a city in Monaco on the Mediterranean Sea which is known for gambling. It was used as a codename during the Manhattan Project by Stan Ulam, John von Neuman and Nicholas Metropolis to describe a new type of statistical sampling - the name chosen based on the city where Ulam's uncle spent considerable time gambling. The method was used to compute the random scattering of neutrons within a nuclear device, first with an analog device called the [FERMIAC](https://hackaday.com/2015/09/11/fermiac-the-computer-that-advanced-the-manhattan-project) and shortly later on the ENIAC (the first programmable, electronic computer).
+[Monte Carlo](https://en.wikipedia.org/wiki/Monte_Carlo) is a city in Monaco on the Mediterranean Sea which is known for gambling. It was used as a codename during the Manhattan Project by Stan Ulam, John von Neuman and Nicholas Metropolis to describe a new type of statistical sampling - the name chosen based on the city where Ulam's uncle spent considerable time gambling. The method was used to compute the random scattering of neutrons within a nuclear device, first with an analog device called the [FERMIAC](https://en.wikipedia.org/wiki/FERMIAC) and shortly later on the ENIAC (the first programmable, electronic computer).
 
 The concept of statistical sampling from a distribution was not new — it was known how to solve a problem involving randomness or uncertainty by running a series of deterministic calculations over e.g. different initial conditions chosen from a distribution at random. The new insight was that there are a wide range of deterministic problems that could be solved via random simulations (such as simulated annealing), which became known as the [Monte Carlo method](https://en.wikipedia.org/wiki/Monte_Carlo_method). These days, for either case it is common to say you "use Monte Carlo" whenever you use some form of randomness (or more typically, pseudorandomness) as part of an algorithm or computation.
 
@@ -541,9 +541,9 @@ call_duration() = rand(Exponential(7.0))
 money_made(duration::Float64)::Float64 = duration <= 1.5 ? 0.0 : 2.5 * duration
 
 function simulate()
-    current_worker_calls = [call_duration() for _ in 1:5] # initialize: all workers start a call at t=0
+    current_call_durations = [call_duration() for _ in 1:5] # initialize: all workers start a call at t=0
 
-    event_list = copy(current_worker_calls)
+    event_list = copy(current_call_durations)
     revenue = 0.0
     t = 0.0
 
@@ -562,11 +562,11 @@ function simulate()
         end
         # record the event
         push!(times_log, t)
-        revenue += money_made(current_worker_calls[i])
+        revenue += money_made(current_call_durations[i])
         push!(revenue_log,revenue)
         # engage worker in new call and set the call-finish event
-        current_worker_calls[i] = call_duration()
-        event_list[i] = t + current_worker_calls[i]
+        current_call_durations[i] = call_duration()
+        event_list[i] = t + current_call_durations[i]
     end
     return (times_log, revenue_log)
 end
@@ -655,31 +655,31 @@ Random.seed!(1)
 
 function queue_simulator(T, arrival_function, service_function, capacity = Inf, init_queue = 0)
     t = 0.0
-    queue = init_queue    # Length of the queue
-    queue_integral = 0.0  # Total time all spent in the queue by all items (/people etc)
+    queue_len = init_queue # Length of the queue
+    queue_integral = 0.0   # Total time all spent in the queue by all items (/people etc)
 
     next_arrival = arrival_function()
     next_service = init_queue == 0 ? Inf : service_function()
 
     while t < T
         t_prev = t
-        q_prev = queue
+        q_prev = queue_len
         # Choose which type of event is next, a service or arrival
         if next_service < next_arrival
             t = next_service
-            queue -= 1
-            if queue > 0
+            queue_len -= 1
+            if queue_len > 0
                 next_service = t + service_function()
             else
                 next_service = Inf
             end
         else
             t = next_arrival
-            if queue == 0
+            if queue_len == 0
                 next_service = t + service_function()
             end
-            if queue < capacity
-                queue += 1
+            if queue_len < capacity
+                queue_len += 1
             end
             next_arrival = t + arrival_function()
         end
@@ -1657,10 +1657,42 @@ using PkgTemplates
 template = Template(user="my_github_user", plugins=[!CompatHelper, !TagBot])
 
 # Generate the new package using the template:
-package_dir = template("MaxHeaps")
+package_dir = template("MyPackage")
 ```
 
-## Package Tests
+By default this should create a directory structure such as the following in
+the `.julia/dev/MyPackage` directory:
+
+```
+.
+└── MyPackage
+    ├── LICENSE
+    ├── Manifest.toml
+    ├── Project.toml
+    ├── README.md
+    ├── src
+    │   └── MyPackage.jl
+    └── test
+        └── runtests.jl
+```
+
+Typically you may want to
+
+* Add your new package to the project path using `Pkg.develop("MyPackage")`
+* Edit the source code and use Revise.jl to test your changes interactively in the REPL
+* Create some tests and run them using `Pkg.test("MyPackage")`
+
+Suppose we created a function `cube_it(x) = x^3` in MyPackage.jl. Tests in
+runtests.jl could look something like:
+
+```julia
+@testset "MyPackage.jl" begin
+    @test cube_it(2) == 8
+    @test cube_it(-2) == -8
+end
+```
+
+## More about package tests
 
 Formal package tests live in the file `test/runtests.jl` - this file is run as a "script" by `Pkg.test()` and the `] test Foo` command in the julia REPL. You can design your tests any way you want, but I suggest using a testing framework like the `Test` standard library. Generally `runtests.jl` will contain "unit tests" - small, fairly fast tests for localized pieces of functionality within the code. It can also contain end-to-end tests and integration tests.
 
