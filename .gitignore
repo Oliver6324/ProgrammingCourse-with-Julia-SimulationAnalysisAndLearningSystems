@@ -8,3 +8,4 @@ people.csv
 
 /.quarto/
 **/*.quarto_ipynb
+**/*.log
