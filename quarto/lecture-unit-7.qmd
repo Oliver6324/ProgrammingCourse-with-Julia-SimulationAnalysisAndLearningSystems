@@ -1717,6 +1717,7 @@ As the code in a project matures, you may end up with thousands of lines of code
 ### Making testing fun
 
 Ideally testing should be as fun as interactively playing with your code in the REPL. Some things which make testing more fun:
+
 * Make sure that individual test cases are easy to read and write. For example using a good test library such as the `Test` standard library, you can use `@test sin(pi/4) ≈ sqrt(2)/2`.
 * Make the reporting of successful and failed tests obvious. (Use the `Test` standard library!)
 * Making running your tests (or a subset of your tests) as fast as possible. For example, splitting them into multiple files within the `test` directory, or using one of the successors to the `Test` stdlib.
@@ -1750,6 +1751,36 @@ Time permitting, we may also discuss the work that goes into developing such pac
 * More on type inference and performance implications. `@code_warntype`, `@code_llvm`, `@code_native`.
 * More on profiling and performance optimization. Benchmarks with [Chairmarks.jl](https://chairmarks.lilithhafner.com) and the `@b` macro.
 
+We will consider the following (bad!) implementatons of `sum()` as examples of
+where type inference fails and benchmarking could be useful.
+
+```{julia}
+# Sum where the compiler can only partially infer the type of `s`
+function bad_sum(xs)
+    s = 0
+    for x in xs
+        s += x
+    end
+    return s
+end
+
+# Sum where the compiler can't infer the type of `s`
+z = 0
+function really_bad_sum(xs)
+   s = z
+   for x in xs
+       s += x
+   end
+   return s
+end
+
+using Chairmarks
+r = rand(1000)
+println(@b sum(r))
+println(@b bad_sum(r))
+println(@b really_bad_sum(r))
+```
+
 # Basic Monte Carlo based statistical analysis
 
 The field of simulation goes beyond simulation of complex systems via discrete event simulation. There are multiple techniques that are used to carry out simulations. A goal is often to estimate performance measures in a more efficient manner than just **naive Monte Carlo**. In a nutshell, naive Monte Carlo is estimation of ${\mathbb E}[g(X)]$ via repeated sampling of i.i.d. values of some random variable $X_i$, and the usage of the estimator,
@@ -1760,7 +1791,7 @@ $$
 
 This is the just the "straightforward approach" for estimation. However there are more advanced methods that often yield much better statistical properties.
 
-One theme of techniques deals with improving the estimation via generation of alternative random variables instead of $X_1,\ldots,X_n$. This technique sometimes called "change of measure" or [importance sampling](https://en.wikipedia.org/wikithis/Importance_sampling). With such a technique a different estimator which still gives unbiased results is used. This alternative estimator can sometimes improve the estimation performance significantly. The key idea is to adjust the estimator (beyond naive Monte Carlo) to take into consideration the different distribution of variables used. If done correctly estimation performance can be significantly improved.
+One theme of techniques deals with improving the estimation via generation of alternative random variables instead of $X_1,\ldots,X_n$. This technique sometimes called "change of measure" or [importance sampling](https://en.wikipedia.org/wiki/Importance_sampling). With such a technique a different estimator which still gives unbiased results is used. This alternative estimator can sometimes improve the estimation performance significantly. The key idea is to adjust the estimator (beyond naive Monte Carlo) to take into consideration the different distribution of variables used. If done correctly estimation performance can be significantly improved.
 
 Without going into the full details, one example is to consider a queueing simulation and assume you wish to estimate the chances of very high queue lengths. Hence here the function $g(\cdot)$ may be an indicator (1 or 0) marking when queues are higher than some given level. Most discrete event simulation runs will **not** generate excessive (rare) queue lengths and hence the naive Monte Carlo estimator will have very high variance. However, with smart importance sampling techniques, you may simulate a different system (related to the original system) and obtain a different estimator that will still allow you to estimate the probability of very large (rare) queues. In the modified system, the probability of drawing a low-likelihood event is boosted, but the "weighting" of the result is reduced proportionally. We don't discuss the details further but they may be studied in more advanced applied probability courses.
 
